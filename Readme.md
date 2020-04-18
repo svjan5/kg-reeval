@@ -15,6 +15,10 @@ TOP and BOTTOM, we report changes in performance with respect to RANDOM protocol
 - Compatible with TensorFlow 1.x, PyTorch 1.x, and Python 3.x.
 - Dependencies can be installed using `requirements.txt`.
 
+### Usage:
+
+* Codes for different models are included in their respective directories.
+
 
 ### Citation:
 Please cite the following paper if you use this code in your work.

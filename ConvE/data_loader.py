@@ -5,7 +5,6 @@ class TrainDataset(Dataset):
 	def __init__(self, triples, params):
 		self.triples	= triples
 		self.p 		= params
-		self.strategy	= self.p.train_strategy
 		self.entities	= np.arange(self.p.num_ent, dtype=np.int32)
 
 	def __len__(self):

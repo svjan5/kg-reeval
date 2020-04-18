@@ -50,7 +50,7 @@ class ConvE(BaseModel):
 
 		self.register_parameter('bias', Parameter(torch.zeros(self.p.num_ent)))
 
-	def forward(self, sub, rel, neg_ents, strategy='one_to_x', zero_cnt=False):
+	def forward(self, sub, rel, zero_cnt=False):
 		sub_emb	= self.ent_embed(sub)
 		rel_emb	= self.rel_embed(rel)
 		stk_inp	= self.concat(sub_emb, rel_emb, self.p.form)

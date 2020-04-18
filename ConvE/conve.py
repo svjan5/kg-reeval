@@ -1,13 +1,6 @@
-import sys; sys.path.insert(0, '../src')
 from helper import *
-
-import sys; sys.path.insert(0, '../')
-import sys; sys.path.insert(0, './')
-
-from ordered_set import OrderedSet
 from data_loader  import *
 from model 	  import *
-from torch.utils.data import DataLoader
 
 
 class Main(object):
@@ -16,7 +9,7 @@ class Main(object):
 
 		ent_set, rel_set = OrderedSet(), OrderedSet()
 		for split in ['train', 'test', 'valid']:
-			for line in open('./data/{}/{}.txt'.format(self.p.dataset, split)):
+			for line in open('../data/{}/{}.txt'.format(self.p.dataset, split)):
 				sub, rel, obj = map(str.lower, line.strip().split('\t'))
 				ent_set.add(sub)
 				rel_set.add(rel)
@@ -37,7 +30,7 @@ class Main(object):
 		sr2o = ddict(set)
 
 		for split in ['train', 'test', 'valid']:
-			for line in open('./data/{}/{}.txt'.format(self.p.dataset, split)):
+			for line in open('../data/{}/{}.txt'.format(self.p.dataset, split)):
 				sub, rel, obj = map(str.lower, line.strip().split('\t'))
 				sub, rel, obj = self.ent2id[sub], self.rel2id[rel], self.ent2id[obj]
 				self.data[split].append((sub, rel, obj))
@@ -57,11 +50,7 @@ class Main(object):
 		self.triples  = ddict(list)
 
 		for (sub, rel), obj in self.sr2o.items():
-			if self.p.loss != 'bce': 
-				print('Change Code! DANGER'); exit(0)
-
 			self.triples['train'].append({'triple':(sub, rel, -1), 'label': self.sr2o[(sub, rel)], 'sub_samp': 1})
-
 
 		for split in ['test', 'valid']:
 			for sub, rel, obj in self.data[split]:
@@ -103,11 +92,11 @@ class Main(object):
 			self.device = torch.device('cpu')
 
 		self.load_data()
-		self.model        = self.add_model(self.p.model)
+		self.model        = self.add_model()
 		self.optimizer    = self.add_optimizer(self.model.parameters())
 
 
-	def add_model(self, model_name):
+	def add_model(self):
 		model = ConvE(self.p)
 		model.to(self.device)
 		return model
@@ -119,7 +108,7 @@ class Main(object):
 	def read_batch(self, batch, split):
 		if split == 'train':
 			triple, label = [ _.to(self.device) for _ in batch]
-			return triple[:, 0], triple[:, 1], triple[:, 2], label, None, None
+			return triple[:, 0], triple[:, 1], triple[:, 2], label
 		else:
 			triple, label = [ _.to(self.device) for _ in batch]
 			return triple[:, 0], triple[:, 1], triple[:, 2], label
@@ -166,7 +155,7 @@ class Main(object):
 
 			for step, batch in enumerate(train_iter):
 				sub, rel, obj, label	= self.read_batch(batch, split)
-				pred, zero_cnt		= self.model.forward(sub, rel, None, 'one_to_n', zero_cnt=True)
+				pred, zero_cnt		= self.model.forward(sub, rel, None, zero_cnt=True)
 				temp.append(zero_cnt)
 
 				b_range			= torch.arange(pred.size()[0], device=self.device)
@@ -227,10 +216,10 @@ class Main(object):
 		for step, batch in enumerate(train_iter):
 			self.optimizer.zero_grad()
 
-			sub, rel, obj, label, neg_ent, sub_samp = self.read_batch(batch, 'train')
+			sub, rel, obj, label = self.read_batch(batch, 'train')
 
-			pred	= self.model.forward(sub, rel, neg_ent, self.p.train_strategy)
-			loss	= self.model.loss(pred, label, sub_samp)
+			pred	= self.model.forward(sub, rel)
+			loss	= self.model.loss(pred, label)
 
 			loss.backward()
 			self.optimizer.step()
@@ -246,7 +235,7 @@ class Main(object):
 	def fit(self):
 		self.best_val_mrr, self.best_val, self.best_test, self.best_test_mrr, self.best_epoch = 0., {}, {}, 0., 0.
 		val_mrr = 0
-		save_path = os.path.join('./checkpoints', self.p.name)
+		save_path = os.path.join('./models', self.p.name)
 
 		if self.p.restore:
 			self.load_model(save_path)
@@ -294,7 +283,6 @@ if __name__ == "__main__":
 
 	parser.add_argument("-epoch",		dest='max_epochs', 	type=int,         default=300,  help="Number of epochs")
 	parser.add_argument("-num_workers",	type=int,               default=5,                      help="For CPU:0, For GPU Serial:1, For GPU PS and COLLECTIVE_ALL_REDUCE: 1+")
-	parser.add_argument("-skip",		type=int,               default=-1,                     help="For CPU:0, For GPU Serial:1, For GPU PS and COLLECTIVE_ALL_REDUCE: 1+")
 	parser.add_argument("-embed_dim",	type=int,              	default=None,                   help="For CPU:0, For GPU Serial:1, For GPU PS and COLLECTIVE_ALL_REDUCE: 1+")
 
 	parser.add_argument('-opt',             dest="opt",             default='adam',                 help='GPU to use')
