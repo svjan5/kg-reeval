@@ -7,14 +7,12 @@ ConvE/models/*
 */__pycache__/*
 
 Release/
-*.zip
 *.sublime-project
 *.sublime-workspace
 
 *.pyc
 *.swp
 *.egg
-*.zip
 *.pt
 ._*
 env/

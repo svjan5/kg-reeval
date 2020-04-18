@@ -14,7 +14,7 @@ from capsuleNet import CapsE
 # ==================================================
 parser = ArgumentParser("CapsE", formatter_class=ArgumentDefaultsHelpFormatter, conflict_handler='resolve')
 
-parser.add_argument("--data", default="./data/", help="Data sources.")
+parser.add_argument("--data", default="../data/", help="Data sources.")
 parser.add_argument("--run_folder", default="./", help="Data sources.")
 parser.add_argument("--name", default="WN18RR", help="Name of the dataset.")
 
@@ -32,7 +32,7 @@ parser.add_argument("--model_name", default='wn18rr_400_4', help="")
 parser.add_argument("--useConstantInit", action='store_true')
 
 parser.add_argument('--iter_routing', default=1, type=int, help='number of iterations in routing algorithm')
-parser.add_argument('--num_outputs_secondCaps', default=1, type=int, help='')
+parser.add_argument('--num_outputs_selesscondCaps', default=1, type=int, help='')
 parser.add_argument('--vec_len_secondCaps', default=10, type=int, help='')
 parser.add_argument('--seed', default=1234, type=int, help='')
 
@@ -98,7 +98,7 @@ with tf.Graph().as_default():
 							vocab_size=len(words_indexes),
 							iter_routing=args.iter_routing,
 							batch_size=2*args.batch_size,
-							num_outputs_secondCaps=args.num_outputs_secondCaps,
+							# num_outputs_secondCaps=args.num_outputs_secondCaps,
 							vec_len_secondCaps=args.vec_len_secondCaps,
 							useConstantInit=args.useConstantInit
 							)

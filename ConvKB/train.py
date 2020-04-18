@@ -13,7 +13,7 @@ from model import ConvKB
 # ==================================================
 parser = ArgumentParser("ConvKB", formatter_class=ArgumentDefaultsHelpFormatter, conflict_handler='resolve')
 
-parser.add_argument("--data", default="./data/", help="Data sources.")
+parser.add_argument("--data", default="../data/", help="Data sources.")
 parser.add_argument("--run_folder", default="../", help="Data sources.")
 parser.add_argument("--name", default="WN18RR", help="Name of the dataset.")
 

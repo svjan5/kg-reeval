@@ -28,7 +28,7 @@ import pickle
 def parse_args():
 	args = argparse.ArgumentParser()
 	# network arguments
-	args.add_argument("-data", "--data", default="./data/WN18RR/", help="data directory")
+	args.add_argument("-data", "--data", default="../data/WN18RR/", help="data directory")
 	args.add_argument("-e_g", "--epochs_gat", type=int, default=3600, help="Number of epochs")
 	args.add_argument("-e_c", "--epochs_conv", type=int, default=200, help="Number of epochs")
 	args.add_argument("-w_gat", "--weight_decay_gat", type=float, default=5e-6, help="L2 reglarization for gat")

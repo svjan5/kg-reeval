@@ -18,6 +18,7 @@ TOP and BOTTOM, we report changes in performance with respect to RANDOM protocol
 ### Usage:
 
 * Codes for different models are included in their respective directories.
+* Run `proproc.sh` for unziping the data.
 
 
 ### Citation:
