@@ -2,7 +2,6 @@
 
 [![Conference](http://img.shields.io/badge/ACL-2020-4b44ce.svg)](https://acl2020.org/)
 [![Paper](http://img.shields.io/badge/paper-arxiv.1911.03903-B31B1B.svg)](https://arxiv.org/abs/1911.03903)
-[![Supplementary](http://img.shields.io/badge/supplementary-pdf-green.svg)](https://shikhar-vashishth.github.io/assets/pdf/kg_reeval_supp.pdf)
 
 Source code for [ACL 2020](http://acl2020.org) paper: [A Re-evaluation of Knowledge Graph Completion Methods](https://arxiv.org/abs/1911.03903). 
 
