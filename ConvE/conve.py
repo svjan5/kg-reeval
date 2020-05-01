@@ -136,10 +136,9 @@ class Main(object):
 		self.optimizer.load_state_dict(state['optimizer'])
 
 	def evaluate(self, split, epoch):
-		left_results, left_scores   = self.predict(split=split, mode='tail_batch')
-		right_results, right_scores = self.predict(split=split, mode='head_batch')
+		left_results   = self.predict(split=split, mode='tail_batch')
+		right_results  = self.predict(split=split, mode='head_batch')
 
-		# pickle.dump(left_scores + right_scores, open('neuron_cnt.pkl', 'wb'))
 		results       = get_combined_results(left_results, right_results)
 		self.logger.info('[Epoch {} {}]: MRR: Tail : {:.5}, Head : {:.5}, Avg : {:.5}'.format(epoch, split, results['left_mrr'], results['right_mrr'], results['mrr']))
 		return results
@@ -147,16 +146,13 @@ class Main(object):
 	def predict(self, split='valid', mode='tail_batch'):
 		self.model.eval()
 
-		temp = []
-
 		with torch.no_grad():
 			results = {}
 			train_iter = iter(self.data_iter['{}_{}'.format(split, mode.split('_')[0])])
 
 			for step, batch in enumerate(train_iter):
 				sub, rel, obj, label	= self.read_batch(batch, split)
-				pred, zero_cnt		= self.model.forward(sub, rel, None, zero_cnt=True)
-				temp.append(zero_cnt)
+				pred			= self.model.forward(sub, rel)
 
 				b_range			= torch.arange(pred.size()[0], device=self.device)
 				target_pred		= pred[b_range, obj]
@@ -167,7 +163,6 @@ class Main(object):
 				obj  = obj.cpu().numpy()
 
 				for i in range(pred.shape[0]):
-					# import pdb; pdb.set_trace()
 					scores	= pred[i]
 					target	= obj[i]
 					tar_scr	= scores[target]
@@ -206,7 +201,7 @@ class Main(object):
 				if step % 100 == 0:
 					self.logger.info('[{}, {} Step {}]\t{}'.format(split.title(), mode.title(), step, self.p.name))
 
-		return results, temp
+		return results
 
 	def run_epoch(self, epoch, val_mrr = 0):
 		self.model.train()
@@ -226,7 +221,7 @@ class Main(object):
 			losses.append(loss.item())
 
 			if step % 100 == 0:
-				self.logger.info('[E:{}| {}]: Train Loss:{:.5},  Val MRR:{:.5}\t{}'.format(epoch, step, np.mean(losses), self.best_val_mrr, self.p.name))
+				self.logger.info('[E:{} | {}]: Train Loss:{:.4},  Val MRR:{:.5}\t{}'.format(epoch, step, np.mean(losses), self.best_val_mrr, self.p.name))
 
 		loss = np.mean(losses)
 		self.logger.info('[Epoch:{}]:  Training Loss:{:.4}\n'.format(epoch, loss))
@@ -268,7 +263,7 @@ if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description="Parser For Arguments", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 	parser.add_argument('-data',            dest="dataset",         default='FB15k-237',            help='Dataset to use')
-	parser.add_argument("-name",            default='testrun_'+str(uuid.uuid4())[:8],		help="Set filename for saving or restoring models")
+	parser.add_argument("-name",            default='testrun',					help="Set filename for saving or restoring models")
 
 	parser.add_argument('-batch',           dest="batch_size",      default=128,    type=int,       help='Batch size')
 

@@ -50,7 +50,7 @@ class ConvE(BaseModel):
 
 		self.register_parameter('bias', Parameter(torch.zeros(self.p.num_ent)))
 
-	def forward(self, sub, rel, zero_cnt=False):
+	def forward(self, sub, rel):
 		sub_emb	= self.ent_embed(sub)
 		rel_emb	= self.rel_embed(rel)
 		stk_inp	= self.concat(sub_emb, rel_emb, self.p.form)
@@ -65,15 +65,10 @@ class ConvE(BaseModel):
 		x	= self.hidden_drop(x)
 		x	= self.bn2(x)
 		x	= F.relu(x)
-
-		if zero_cnt:
-			cnt = (x == 0.0).sum(-1).cpu().numpy()
-			tot = x.shape[0]
-
+		
 		x = torch.mm(x, self.ent_embed.weight.transpose(1,0))
 		x += self.bias.expand_as(x)
 
 		pred	= torch.sigmoid(x)
 
-		if zero_cnt: 	return pred, (cnt, tot)
-		else: 		return pred
+		return pred
