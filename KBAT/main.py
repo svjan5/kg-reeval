@@ -102,7 +102,6 @@ entity_embeddings_copied	= deepcopy(entity_embeddings)
 relation_embeddings_copied	= deepcopy(relation_embeddings)
 
 print("Initial entity dimensions {} , relation dimensions {}".format(entity_embeddings.size(), relation_embeddings.size()))
-# %%
 
 CUDA = torch.cuda.is_available()
 
@@ -195,8 +194,8 @@ def train_gat(args):
 
 			loss = batch_gat_loss(gat_loss_func, train_indices, entity_embed, relation_embed)
 
-			# loss.backward()
-			# optimizer.step()
+			loss.backward()
+			optimizer.step()
 
 			epoch_loss.append(loss.data.item())
 
@@ -230,11 +229,6 @@ def train_conv(args):
 
 	model_gat.load_state_dict(torch.load('{}/trained_{}.pth'.format(args.output_folder, args.epochs_gat - 1)))
 
-	# open('/scratche/home/shikhar/real_rel_gcn/cloned_repos/ConvKB/data/FB15k-237/entity2vec.txt', 'w').write('\n'.join(['\t'.join([str(y) for y in x]) for x in ent]))
-	# open('/scratche/home/shikhar/real_rel_gcn/cloned_repos/ConvKB/data/FB15k-237/relation2vec.txt', 'w').write('\n'.join(['\t'.join([str(y) for y in x]) for x in ent]))
-
-	# open('/scratche/home/shikhar/real_rel_gcn/cloned_repos/ConvKB/data/WN18RR/entity2vec.txt', 'w').write('\n'.join(['\t'.join([str(y) for y in x]) for x in model_gat.final_entity_embeddings.cpu().detach().numpy()]))
-	# open('/scratche/home/shikhar/real_rel_gcn/cloned_repos/ConvKB/data/WN18RR/relation2vec.txt', 'w').write('\n'.join(['\t'.join([str(y) for y in x]) for x in model_gat.final_relation_embeddings.cpu().detach().numpy()]))
 	model_conv.final_entity_embeddings	= model_gat.final_entity_embeddings
 	model_conv.final_relation_embeddings	= model_gat.final_relation_embeddings
 
@@ -307,6 +301,6 @@ def evaluate_conv(args, unique_entities, eval_type):
 	with torch.no_grad():
 		Corpus_.get_validation_pred(args, model_conv, unique_entities, eval_type=eval_type)
 
-# train_gat(args)
-# train_conv(args)
+train_gat(args)
+train_conv(args)
 evaluate_conv(args, Corpus_.unique_entities_train, args.eval_type)
