@@ -34,21 +34,21 @@ TOP and BOTTOM, we report changes in performance with respect to RANDOM protocol
 Please cite the following paper if you use this code in your work.
 
 ```bibtex
-@ARTICLE{kgeval,
-       author = {{Sun}, Zhiqing and {Vashishth}, Shikhar and {Sanyal}, Soumya and
-         {Talukdar}, Partha and {Yang}, Yiming},
-        title = "{A Re-evaluation of Knowledge Graph Completion Methods}",
-      journal = {arXiv e-prints},
-     keywords = {Computer Science - Computation and Language},
-         year = "2019",
-        month = "Nov",
-          eid = {arXiv:1911.03903},
-        pages = {arXiv:1911.03903},
-archivePrefix = {arXiv},
-       eprint = {1911.03903},
- primaryClass = {cs.CL},
-       adsurl = {https://ui.adsabs.harvard.edu/abs/2019arXiv191103903S},
-      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+@inproceedings{sun-etal-2020-evaluation,
+    title = "A Re-evaluation of Knowledge Graph Completion Methods",
+    author = "Sun, Zhiqing  and
+      Vashishth, Shikhar  and
+      Sanyal, Soumya  and
+      Talukdar, Partha  and
+      Yang, Yiming",
+    booktitle = "Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics",
+    month = jul,
+    year = "2020",
+    address = "Online",
+    publisher = "Association for Computational Linguistics",
+    url = "https://www.aclweb.org/anthology/2020.acl-main.489",
+    doi = "10.18653/v1/2020.acl-main.489",
+    pages = "5516--5522"
 }
 ```
 
