@@ -71,7 +71,7 @@ def load_data(args):
 	train_data, validation_data, test_data, entity2id, relation2id, headTailSelector, unique_entities_train = build_data(args.data, is_unweigted=False, directed=True)
 
 	if args.pretrained_emb:
-		entity_embeddings, relation_embeddings = init_embeddings(os.path.join(args.data, 'entity2vec.txt'), os.path.join(args.data, 'relation2vec.txt'))
+		entity_embeddings, relation_embeddings = init_embeddings(os.path.join(args.data, 'entity2vec100.init'), os.path.join(args.data, 'relation2vec100.init'))
 		print("Initialised relations and entities from TransE")
 	else:
 		entity_embeddings	= np.random.randn(len(entity2id), args.embedding_size)
