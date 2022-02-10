@@ -9,4 +9,4 @@ numpy==1.16.4
 ordered_set==3.1.1
 pymongo==3.10.1
 scikit_learn==0.22.2.post1
-tensorflow==2.1.0
+tensorflow==2.5.3
